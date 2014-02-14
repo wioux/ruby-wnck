@@ -1,0 +1,10 @@
+VALUE <%=rbmethod%>(VALUE self) {
+  WnckObject *object;
+  Wnck<%=domain%> *<%=domain.uscore%>;
+  Data_Get_Struct(self, WnckObject, object);
+  <%=domain.uscore%> = object->ptr;
+
+  const char *str;
+  str = <%=libmethod%>(<%=domain.uscore%>);
+  return str ? rb_str_new2(str) : Qnil;
+}

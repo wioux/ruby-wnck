@@ -1,0 +1,19 @@
+VALUE <%=rbmethod%>(VALUE self) {
+  WnckObject *object;
+  Wnck<%=domain%> *<%=domain.uscore%>;
+  Data_Get_Struct(self, WnckObject, object);
+  <%=domain.uscore%> = object->ptr;
+
+  VALUE currv, result = rb_ary_new();
+
+  void *<%=codomain.uscore%>;
+  GList *<%=method%> = <%=libmethod%>(<%=domain.uscore%>);
+  int i, n<%=method%> = g_list_length(<%=method%>);
+  for (i = 0; i < n<%=method%>; ++i) {
+    <%=codomain.uscore%> = g_list_nth_data(<%=method%>, i);
+    currv = rwnck_object_create(<%=vcodomain%>, <%=codomain.uscore%>);
+    rb_ary_push(result, currv);
+  }
+
+  return result;
+}

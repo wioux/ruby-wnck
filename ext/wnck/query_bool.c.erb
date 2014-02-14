@@ -1,0 +1,9 @@
+VALUE <%=rbmethod%>(VALUE self) {
+  WnckObject *object;
+  Wnck<%=domain%> *<%=domain.uscore%>;
+  Data_Get_Struct(self, WnckObject, object);
+  <%=domain.uscore%> = object->ptr;
+  if (<%=libmethod%>(<%=domain.uscore%>) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}

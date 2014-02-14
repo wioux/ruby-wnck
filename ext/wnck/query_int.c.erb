@@ -1,0 +1,7 @@
+VALUE <%=rbmethod%>(VALUE self) {
+  WnckObject *object;
+  Wnck<%=domain%> *<%=domain.uscore%>;
+  Data_Get_Struct(self, WnckObject, object);
+  <%=domain.uscore%> = object->ptr;
+  return INT2FIX((int)<%=libmethod%>(<%=domain.uscore%>));
+}

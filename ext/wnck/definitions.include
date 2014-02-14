@@ -1,0 +1,791 @@
+VALUE rwnck_screen_active_window(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  
+  WnckWindow *window = wnck_screen_get_active_window(screen);
+  if (window)
+    return rwnck_object_create(vWnckWindow, window);
+  return Qnil;
+}
+VALUE rwnck_screen_previously_active_window(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  
+  WnckWindow *window = wnck_screen_get_previously_active_window(screen);
+  if (window)
+    return rwnck_object_create(vWnckWindow, window);
+  return Qnil;
+}
+VALUE rwnck_screen_windows(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+
+  VALUE currv, result = rb_ary_new();
+
+  void *window;
+  GList *windows = wnck_screen_get_windows(screen);
+  int i, nwindows = g_list_length(windows);
+  for (i = 0; i < nwindows; ++i) {
+    window = g_list_nth_data(windows, i);
+    currv = rwnck_object_create(vWnckWindow, window);
+    rb_ary_push(result, currv);
+  }
+
+  return result;
+}
+VALUE rwnck_screen_windows_stacked(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+
+  VALUE currv, result = rb_ary_new();
+
+  void *window;
+  GList *windows_stacked = wnck_screen_get_windows_stacked(screen);
+  int i, nwindows_stacked = g_list_length(windows_stacked);
+  for (i = 0; i < nwindows_stacked; ++i) {
+    window = g_list_nth_data(windows_stacked, i);
+    currv = rwnck_object_create(vWnckWindow, window);
+    rb_ary_push(result, currv);
+  }
+
+  return result;
+}
+VALUE rwnck_screen_number(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  return INT2FIX((int)wnck_screen_get_number(screen));
+}
+VALUE rwnck_screen_width(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  return INT2FIX((int)wnck_screen_get_width(screen));
+}
+VALUE rwnck_screen_height(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  return INT2FIX((int)wnck_screen_get_height(screen));
+}
+VALUE rwnck_screen_window_manager_name(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+
+  const char *str;
+  str = wnck_screen_get_window_manager_name(screen);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_screen_background_pixmap(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  return INT2FIX((int)wnck_screen_get_background_pixmap(screen));
+}
+VALUE rwnck_screen_showing_desktop_p(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  if (wnck_screen_get_showing_desktop(screen) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_screen_force_update(VALUE self) {
+  WnckObject *object;
+  WnckScreen *screen;
+  Data_Get_Struct(self, WnckObject, object);
+  screen = object->ptr;
+  wnck_screen_get_force_update(screen);
+  return Qnil;
+}
+void wnck_callback_screen_window(WnckScreen *screen0, WnckWindow *window1, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckScreen, screen0));
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckWindow, window1));
+//  
+  rb_proc_call(rfunc, args);
+}
+void wnck_callback_screen_workspace(WnckScreen *screen0, WnckWorkspace *workspace1, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckScreen, screen0));
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckWorkspace, workspace1));
+//  
+  rb_proc_call(rfunc, args);
+}
+void wnck_callback_screen_application(WnckScreen *screen0, WnckApplication *application1, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckScreen, screen0));
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckApplication, application1));
+//  
+  rb_proc_call(rfunc, args);
+}
+void wnck_callback_screen(WnckScreen *screen0, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckScreen, screen0));
+//  
+  rb_proc_call(rfunc, args);
+}
+void wnck_callback_screen_classgroup(WnckScreen *screen0, WnckClassGroup *classgroup1, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckScreen, screen0));
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckClassGroup, classgroup1));
+//  
+  rb_proc_call(rfunc, args);
+}
+VALUE rwnck_window_screen(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  
+  WnckScreen *screen = wnck_window_get_screen(window);
+  if (screen)
+    return rwnck_object_create(vWnckScreen, screen);
+  return Qnil;
+}
+VALUE rwnck_window_class_group(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  
+  WnckClassGroup *class_group = wnck_window_get_class_group(window);
+  if (class_group)
+    return rwnck_object_create(vWnckClassGroup, class_group);
+  return Qnil;
+}
+VALUE rwnck_window_application(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  
+  WnckApplication *application = wnck_window_get_application(window);
+  if (application)
+    return rwnck_object_create(vWnckApplication, application);
+  return Qnil;
+}
+VALUE rwnck_window_has_name_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_has_name(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_name(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+
+  const char *str;
+  str = wnck_window_get_name(window);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_window_has_icon_name_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_has_icon_name(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_icon_name(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+
+  const char *str;
+  str = wnck_window_get_icon_name(window);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_window_icon_is_fallback_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_icon_is_fallback(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_group_leader(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  return INT2FIX((int)wnck_window_get_group_leader(window));
+}
+VALUE rwnck_window_xid(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  return INT2FIX((int)wnck_window_get_xid(window));
+}
+VALUE rwnck_window_pid(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  return INT2FIX((int)wnck_window_get_pid(window));
+}
+VALUE rwnck_window_type(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  return INT2FIX((int)wnck_window_get_window_type(window));
+}
+VALUE rwnck_window_state(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  return INT2FIX((int)wnck_window_get_state(window));
+}
+VALUE rwnck_window_minimized_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_minimized(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_maximized_horizontally_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_maximized_horizontally(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_maximized_vertically_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_maximized_vertically(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_maximized_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_maximized(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_shaded_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_shaded(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_pinned_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_pinned(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_sticky_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_sticky(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_above_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_above(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_below_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_below(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_skip_pager_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_skip_pager(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_skip_tasklist_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_skip_tasklist(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_fullscreen_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_fullscreen(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_needs_attention_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_needs_attention(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_or_transient_needs_attention_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_or_transient_needs_attention(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_actions(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  return INT2FIX((int)wnck_window_get_actions(window));
+}
+VALUE rwnck_window_minimize(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_minimize(window);
+  return Qnil;
+}
+VALUE rwnck_window_maximize_horizontally(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_maximize_horizontally(window);
+  return Qnil;
+}
+VALUE rwnck_window_unmaximize_horizontally(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unmaximize_horizontally(window);
+  return Qnil;
+}
+VALUE rwnck_window_maximize_vertically(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_maximize_vertically(window);
+  return Qnil;
+}
+VALUE rwnck_window_unmaximize_vertically(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unmaximize_vertically(window);
+  return Qnil;
+}
+VALUE rwnck_window_maximize(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_maximize(window);
+  return Qnil;
+}
+VALUE rwnck_window_unmaximize(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unmaximize(window);
+  return Qnil;
+}
+VALUE rwnck_window_shade(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_shade(window);
+  return Qnil;
+}
+VALUE rwnck_window_unshade(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unshade(window);
+  return Qnil;
+}
+VALUE rwnck_window_pin(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_pin(window);
+  return Qnil;
+}
+VALUE rwnck_window_unpin(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unpin(window);
+  return Qnil;
+}
+VALUE rwnck_window_stick(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_stick(window);
+  return Qnil;
+}
+VALUE rwnck_window_unstick(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unstick(window);
+  return Qnil;
+}
+VALUE rwnck_window_make_above(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_make_above(window);
+  return Qnil;
+}
+VALUE rwnck_window_unmake_above(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unmake_above(window);
+  return Qnil;
+}
+VALUE rwnck_window_make_below(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_make_below(window);
+  return Qnil;
+}
+VALUE rwnck_window_unmake_below(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_unmake_below(window);
+  return Qnil;
+}
+VALUE rwnck_window_active_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_active(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_most_recently_activated_p(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  if (wnck_window_is_most_recently_activated(window) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_window_keyboard_move(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_keyboard_move(window);
+  return Qnil;
+}
+VALUE rwnck_window_keyboard_size(VALUE self) {
+  WnckObject *object;
+  WnckWindow *window;
+  Data_Get_Struct(self, WnckObject, object);
+  window = object->ptr;
+  wnck_window_get_keyboard_size(window);
+  return Qnil;
+}
+void wnck_callback_window(WnckWindow *window0, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckWindow, window0));
+//  
+  rb_proc_call(rfunc, args);
+}
+VALUE rwnck_class_group_windows(VALUE self) {
+  WnckObject *object;
+  WnckClassGroup *class_group;
+  Data_Get_Struct(self, WnckObject, object);
+  class_group = object->ptr;
+
+  VALUE currv, result = rb_ary_new();
+
+  void *window;
+  GList *windows = wnck_class_group_get_windows(class_group);
+  int i, nwindows = g_list_length(windows);
+  for (i = 0; i < nwindows; ++i) {
+    window = g_list_nth_data(windows, i);
+    currv = rwnck_object_create(vWnckWindow, window);
+    rb_ary_push(result, currv);
+  }
+
+  return result;
+}
+VALUE rwnck_class_group_name(VALUE self) {
+  WnckObject *object;
+  WnckClassGroup *class_group;
+  Data_Get_Struct(self, WnckObject, object);
+  class_group = object->ptr;
+
+  const char *str;
+  str = wnck_class_group_get_name(class_group);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_class_group_res_class(VALUE self) {
+  WnckObject *object;
+  WnckClassGroup *class_group;
+  Data_Get_Struct(self, WnckObject, object);
+  class_group = object->ptr;
+
+  const char *str;
+  str = wnck_class_group_get_res_class(class_group);
+  return str ? rb_str_new2(str) : Qnil;
+}
+void wnck_callback_classgroup(WnckClassGroup *classgroup0, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckClassGroup, classgroup0));
+//  
+  rb_proc_call(rfunc, args);
+}
+VALUE rwnck_workspace_screen(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  
+  WnckScreen *screen = wnck_workspace_get_screen(workspace);
+  if (screen)
+    return rwnck_object_create(vWnckScreen, screen);
+  return Qnil;
+}
+VALUE rwnck_workspace_number(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  return INT2FIX((int)wnck_workspace_get_number(workspace));
+}
+VALUE rwnck_workspace_name(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+
+  const char *str;
+  str = wnck_workspace_get_name(workspace);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_workspace_width(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  return INT2FIX((int)wnck_workspace_get_width(workspace));
+}
+VALUE rwnck_workspace_height(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  return INT2FIX((int)wnck_workspace_get_height(workspace));
+}
+VALUE rwnck_workspace_viewport_x(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  return INT2FIX((int)wnck_workspace_get_viewport_x(workspace));
+}
+VALUE rwnck_workspace_viewport_y(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  return INT2FIX((int)wnck_workspace_get_viewport_y(workspace));
+}
+VALUE rwnck_workspace_virtual_p(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  if (wnck_workspace_is_virtual(workspace) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_workspace_layout_row(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  return INT2FIX((int)wnck_workspace_get_layout_row(workspace));
+}
+VALUE rwnck_workspace_layout_column(VALUE self) {
+  WnckObject *object;
+  WnckWorkspace *workspace;
+  Data_Get_Struct(self, WnckObject, object);
+  workspace = object->ptr;
+  return INT2FIX((int)wnck_workspace_get_layout_column(workspace));
+}
+void wnck_callback_workspace(WnckWorkspace *workspace0, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckWorkspace, workspace0));
+//  
+  rb_proc_call(rfunc, args);
+}
+VALUE rwnck_application_xid(VALUE self) {
+  WnckObject *object;
+  WnckApplication *application;
+  Data_Get_Struct(self, WnckObject, object);
+  application = object->ptr;
+  return INT2FIX((int)wnck_application_get_xid(application));
+}
+VALUE rwnck_application_name(VALUE self) {
+  WnckObject *object;
+  WnckApplication *application;
+  Data_Get_Struct(self, WnckObject, object);
+  application = object->ptr;
+
+  const char *str;
+  str = wnck_application_get_name(application);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_application_icon_name(VALUE self) {
+  WnckObject *object;
+  WnckApplication *application;
+  Data_Get_Struct(self, WnckObject, object);
+  application = object->ptr;
+
+  const char *str;
+  str = wnck_application_get_icon_name(application);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_application_pid(VALUE self) {
+  WnckObject *object;
+  WnckApplication *application;
+  Data_Get_Struct(self, WnckObject, object);
+  application = object->ptr;
+  return INT2FIX((int)wnck_application_get_pid(application));
+}
+VALUE rwnck_application_icon_is_fallback_p(VALUE self) {
+  WnckObject *object;
+  WnckApplication *application;
+  Data_Get_Struct(self, WnckObject, object);
+  application = object->ptr;
+  if (wnck_application_get_icon_is_fallback(application) == TRUE)
+    return Qtrue;
+  return Qfalse;
+}
+VALUE rwnck_application_startup_id(VALUE self) {
+  WnckObject *object;
+  WnckApplication *application;
+  Data_Get_Struct(self, WnckObject, object);
+  application = object->ptr;
+
+  const char *str;
+  str = wnck_application_get_startup_id(application);
+  return str ? rb_str_new2(str) : Qnil;
+}
+VALUE rwnck_application_n_windows(VALUE self) {
+  WnckObject *object;
+  WnckApplication *application;
+  Data_Get_Struct(self, WnckObject, object);
+  application = object->ptr;
+  return INT2FIX((int)wnck_application_get_n_windows(application));
+}
+void wnck_callback_application(WnckApplication *application0, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  
+  rb_ary_push(args, rwnck_object_create(vWnckApplication, application0));
+//  
+  rb_proc_call(rfunc, args);
+}

@@ -1,0 +1,9 @@
+<% cargs = args.each_with_index.map{ |x, i| "Wnck#{x} *#{x.downcase}#{i}" } %>
+void <%=rbmethod%>(<%=cargs.join(', ')%>, gpointer *rb_proc) {
+  VALUE rfunc = (VALUE)rb_proc;
+  VALUE args = rb_ary_new();
+//  <% args.each_with_index do |arg, i| %>
+  rb_ary_push(args, rwnck_object_create(vWnck<%=arg%>, <%=arg.downcase%><%=i%>));
+//  <% end %>
+  rb_proc_call(rfunc, args);
+}

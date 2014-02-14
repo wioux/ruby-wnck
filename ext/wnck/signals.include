@@ -1,0 +1,48 @@
+    if (klass == vWnckScreen && !strcmp(signal, "active-window-changed"))
+      return (GCallback)wnck_callback_screen_window;
+    if (klass == vWnckScreen && !strcmp(signal, "active-workspace-changed"))
+      return (GCallback)wnck_callback_screen_workspace;
+    if (klass == vWnckScreen && !strcmp(signal, "application-closed"))
+      return (GCallback)wnck_callback_screen_application;
+    if (klass == vWnckScreen && !strcmp(signal, "application-opened"))
+      return (GCallback)wnck_callback_screen_application;
+    if (klass == vWnckScreen && !strcmp(signal, "background-changed"))
+      return (GCallback)wnck_callback_screen;
+    if (klass == vWnckScreen && !strcmp(signal, "class-group-closed"))
+      return (GCallback)wnck_callback_screen_classgroup;
+    if (klass == vWnckScreen && !strcmp(signal, "class-group-opened"))
+      return (GCallback)wnck_callback_screen_classgroup;
+    if (klass == vWnckScreen && !strcmp(signal, "showing-desktop-changed"))
+      return (GCallback)wnck_callback_screen;
+    if (klass == vWnckScreen && !strcmp(signal, "viewports-changed"))
+      return (GCallback)wnck_callback_screen;
+    if (klass == vWnckScreen && !strcmp(signal, "window-manager-changed"))
+      return (GCallback)wnck_callback_screen;
+    if (klass == vWnckScreen && !strcmp(signal, "window-opened"))
+      return (GCallback)wnck_callback_screen_window;
+    if (klass == vWnckScreen && !strcmp(signal, "window-stacking-changed"))
+      return (GCallback)wnck_callback_screen;
+    if (klass == vWnckScreen && !strcmp(signal, "workspace-created"))
+      return (GCallback)wnck_callback_screen_workspace;
+    if (klass == vWnckScreen && !strcmp(signal, "workspace-destroyed"))
+      return (GCallback)wnck_callback_screen_workspace;
+    if (klass == vWnckWindow && !strcmp(signal, "class-changed"))
+      return (GCallback)wnck_callback_window;
+    if (klass == vWnckWindow && !strcmp(signal, "geometry-changed"))
+      return (GCallback)wnck_callback_window;
+    if (klass == vWnckWindow && !strcmp(signal, "icon-changed"))
+      return (GCallback)wnck_callback_window;
+    if (klass == vWnckWindow && !strcmp(signal, "name-changed"))
+      return (GCallback)wnck_callback_window;
+    if (klass == vWnckWindow && !strcmp(signal, "role-changed"))
+      return (GCallback)wnck_callback_window;
+    if (klass == vWnckClassGroup && !strcmp(signal, "icon-changed"))
+      return (GCallback)wnck_callback_classgroup;
+    if (klass == vWnckClassGroup && !strcmp(signal, "name-changed"))
+      return (GCallback)wnck_callback_classgroup;
+    if (klass == vWnckWorkspace && !strcmp(signal, "name-changed"))
+      return (GCallback)wnck_callback_workspace;
+    if (klass == vWnckApplication && !strcmp(signal, "icon-changed"))
+      return (GCallback)wnck_callback_application;
+    if (klass == vWnckApplication && !strcmp(signal, "name-changed"))
+      return (GCallback)wnck_callback_application;

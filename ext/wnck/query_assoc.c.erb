@@ -1,0 +1,11 @@
+VALUE <%=rbmethod%>(VALUE self) {
+  WnckObject *object;
+  Wnck<%=domain%> *<%=domain.uscore%>;
+  Data_Get_Struct(self, WnckObject, object);
+  <%=domain.uscore%> = object->ptr;
+  
+  Wnck<%=codomain%> *<%=codomain.uscore%> = <%=libmethod%>(<%=domain.uscore%>);
+  if (<%=codomain.uscore%>)
+    return rwnck_object_create(<%=vcodomain%>, <%=codomain.uscore%>);
+  return Qnil;
+}
